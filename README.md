@@ -16,6 +16,7 @@ torchvision >= 0.12.0
 
 ### 3. Run experiments
 You can run ```run_script.py``` for different models including ResNet18, ResNet50, RegNet600, RegNet3200, MobilenetV2, and MNasNet.
+It will experiment on 4 bit settings including W2A2, W4A2, W2A4, and W4A4.
 
 Take ResNet18 as an example:
 ```
