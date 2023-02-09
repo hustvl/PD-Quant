@@ -1,0 +1,10 @@
+*.so
+*.egg
+*.egg-info
+*.log
+*.pyc
+*.npy
+*.pth
+.DS_Store
+__pycache__
+model_zoo
