@@ -127,48 +127,6 @@ def validate_model(val_loader, model, device=None, print_freq=100):
 
     return top1.avg
 
-
-@torch.no_grad()
-def validate_model_cali(cali_data, cali_target, model, device=None, print_freq=8, real=False):
-    batch_size = 32
-    if device is None:
-        device = next(model.parameters()).device
-    else:
-        model.to(device)
-    batch_time = AverageMeter('Time', ':6.3f')
-    top1 = AverageMeter('Acc@1', ':6.2f')
-    top5 = AverageMeter('Acc@5', ':6.2f')
-    ce = AverageMeter('CE', ':6.6f')
-    progress = ProgressMeter(
-        int(len(cali_data) / batch_size),
-        [batch_time, top1, top5, ce],
-        prefix='Test: ')
-    ce_loss = torch.nn.CrossEntropyLoss()
-    # switch to evaluate mode
-    model.eval()
-
-    end = time.time()
-    for i in range(int(len(cali_target) / batch_size)):
-        output = model(cali_data[i * batch_size:(i + 1) * batch_size].to(device))
-
-        loss = ce_loss(output, cali_target[i * batch_size:(i + 1) * batch_size].to(device))
-        acc1, acc5 = accuracy(output, cali_target[i * batch_size:(i + 1) * batch_size].to(device), topk=(1, 5))
-        top1.update(acc1[0], cali_data[i * batch_size:(i + 1) * batch_size].size(0))
-        top5.update(acc5[0], cali_data[i * batch_size:(i + 1) * batch_size].size(0))
-        ce.update(loss)
-
-        # measure elapsed time``
-        batch_time.update(time.time() - end)
-        end = time.time()
-
-        if i % print_freq == 0:
-            progress.display(i)
-        
-    print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f} CE {ce.avg:.6f}'.format(top1=top1, top5=top5, ce=ce))
-
-    return top1.avg
-
-
 def get_train_samples(train_loader, num_samples):
     train_data, target = [], []
     for batch in train_loader:
@@ -293,4 +251,3 @@ if __name__ == '__main__':
     qnn.set_quant_state(weight_quant=True, act_quant=True)
     print('Full quantization (W{}A{}) accuracy: {}'.format(args.n_bits_w, args.n_bits_a,
                                                            validate_model(test_loader, qnn)))
-    print('quantization calibration accuracy: {}'.format(validate_model_cali(cali_data, cali_target, qnn)))
