@@ -1,15 +1,11 @@
 <div align="center">
 <h2>PD-Quant</h2>
 <h4>PD-Quant: Post-Training Quantization Based on Prediction Difference Metric</h4>
-<br>
 
 <div>
 <a href="https://arxiv.org/abs/2212.07048">[arXiv]</a>
 </div>
 </div>
-
-# PD-Quant
-PyTorch implementation of *PD-Quant: Post-Training Quantization Based on Prediction Difference Metric*
 
 ## Usage
 ### 1. Download pre-trained FP model.
